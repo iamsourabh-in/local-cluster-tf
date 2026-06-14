@@ -14,6 +14,7 @@ This repository contains a Terraform configuration to spin up a local Kubernetes
 - **OpenTelemetry Collector**: Receives OTLP metrics, traces, and logs, routing them to Prometheus, Jaeger, and Loki respectively.
 - **External Secrets Operator**: Syncs secrets from external APIs (AWS Secrets Manager, Vault, etc.) into Kubernetes, pre-configured with a Vault `ClusterSecretStore` using secure Kubernetes authentication.
 - **HashiCorp Vault**: Secure secret storage server running in Development mode, unsealed automatically and seeded with Kubernetes authentication.
+- **Istio Service Mesh**: Deploys Istio's base CRDs and control plane (`istiod`), pre-configured to support sidecar injection (enabled for the `example-app` namespace).
 
 ---
 
@@ -80,6 +81,8 @@ curl -k https://example-app.local/
   Within Grafana's Jaeger trace view, click on any span and you will see a **"Document"** link next to the span details that links directly to the corresponding Loki container logs around that span's timestamp!
 - **External Secrets & Vault Integration**:
   The External Secrets Operator dynamically retrieves the database credentials from HashiCorp Vault using the Kubernetes authentication method (where ESO's ServiceAccount token is verified by Vault) and syncs them as a standard Kubernetes Secret (`db-secret`). When you load the app, the page displays the database username (`vault-admin-db`) and masked password (`Vau***`) injected securely via env variables.
+- **Istio Sidecar Injection**:
+  The `example-app` namespace is labeled with `istio-injection: enabled`. The deployed application pod automatically runs with the Envoy proxy (`istio-proxy`) sidecar container (verified by checking `kubectl get pods -n example-app`, showing `2/2` containers ready).
 
 ---
 
