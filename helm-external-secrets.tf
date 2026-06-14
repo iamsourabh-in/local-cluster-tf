@@ -47,7 +47,7 @@ resource "kubectl_manifest" "vault_secret_store" {
     spec:
       provider:
         vault:
-          server: "http://vault.vault.svc.cluster.local:8200"
+          server: "http://vault.${var.vault_namespace}.svc.cluster.local:8200"
           path: "secret"
           version: "v2"
           auth:
@@ -56,7 +56,7 @@ resource "kubectl_manifest" "vault_secret_store" {
               role: "external-secrets-role"
               serviceAccountRef:
                 name: "external-secrets"
-                namespace: "external-secrets"
+                namespace: "${var.external_secrets_namespace}"
   YAML
 
   depends_on = [

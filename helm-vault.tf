@@ -1,7 +1,7 @@
 resource "kubernetes_namespace" "vault" {
   depends_on = [kind_cluster.default]
   metadata {
-    name = "vault"
+    name = var.vault_namespace
   }
 }
 
@@ -17,7 +17,7 @@ resource "helm_release" "vault" {
     server:
       dev:
         enabled: true
-        devRootToken: "vault-root-token"
+        devRootToken: "${var.vault_root_token}"
       service:
         enabled: true
     EOT
@@ -36,7 +36,7 @@ resource "kubectl_manifest" "vault_seeding_job" {
     kind: Job
     metadata:
       name: vault-seeding-job
-      namespace: vault
+      namespace: ${var.vault_namespace}
     spec:
       template:
         spec:
@@ -47,8 +47,8 @@ resource "kubectl_manifest" "vault_seeding_job" {
             args:
             - |
               set -e
-              export VAULT_ADDR="http://vault.vault.svc.cluster.local:8200"
-              export VAULT_TOKEN="vault-root-token"
+              export VAULT_ADDR="http://vault.${var.vault_namespace}.svc.cluster.local:8200"
+              export VAULT_TOKEN="${var.vault_root_token}"
               
               echo "Waiting for Vault to be ready..."
               until vault status > /dev/null 2>&1; do
@@ -73,7 +73,7 @@ resource "kubectl_manifest" "vault_seeding_job" {
               # Create role for ESO
               vault write auth/kubernetes/role/external-secrets-role \
                 bound_service_account_names=external-secrets \
-                bound_service_account_namespaces=external-secrets \
+                bound_service_account_namespaces=${var.external_secrets_namespace} \
                 policies=example-policy \
                 ttl=24h
               

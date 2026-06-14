@@ -58,3 +58,16 @@ variable "external_secrets_namespace" {
   default     = "external-secrets"
 }
 
+variable "vault_namespace" {
+  description = "Namespace for HashiCorp Vault"
+  type        = string
+  default     = "vault"
+}
+
+variable "vault_root_token" {
+  description = "Root token for Vault in development mode"
+  type        = string
+  default     = "vault-root-token"
+}
+
+
