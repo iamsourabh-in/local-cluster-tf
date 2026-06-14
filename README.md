@@ -12,6 +12,7 @@ This repository contains a Terraform configuration to spin up a local Kubernetes
 - **Promtail**: Log agent that ships stdout/stderr container logs to Loki.
 - **Jaeger**: Trace visualizer and collector running in All-in-One mode.
 - **OpenTelemetry Collector**: Receives OTLP metrics, traces, and logs, routing them to Prometheus, Jaeger, and Loki respectively.
+- **External Secrets Operator**: Syncs secrets from external APIs (AWS Secrets Manager, Vault, etc.) into Kubernetes, pre-configured with a local `ClusterSecretStore` (Fake provider) for demonstration.
 
 ---
 
@@ -76,6 +77,8 @@ curl -k https://example-app.local/
   ```
 - **Unified Traces-to-Logs**:
   Within Grafana's Jaeger trace view, click on any span and you will see a **"Document"** link next to the span details that links directly to the corresponding Loki container logs around that span's timestamp!
+- **External Secrets Injection**:
+  When you load the app, the web page will display the database username (`eso-admin-db`) and masked password (`Sup***`) injected dynamically from the `ClusterSecretStore` via the `ExternalSecret` resource.
 
 ---
 

@@ -51,3 +51,10 @@ variable "example_domain" {
   type        = string
   default     = "example-app.local"
 }
+
+variable "external_secrets_namespace" {
+  description = "Namespace for External Secrets Operator"
+  type        = string
+  default     = "external-secrets"
+}
+

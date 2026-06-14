@@ -74,3 +74,11 @@ resource "kubernetes_namespace" "monitoring" {
     name = var.monitoring_namespace
   }
 }
+
+resource "kubernetes_namespace" "external_secrets" {
+  depends_on = [kind_cluster.default]
+  metadata {
+    name = var.external_secrets_namespace
+  }
+}
+

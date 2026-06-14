@@ -17,6 +17,7 @@ resource "helm_release" "cert_manager" {
 }
 
 resource "kubectl_manifest" "selfsigned_issuer" {
+  validate_schema = false
   yaml_body = <<-YAML
     apiVersion: cert-manager.io/v1
     kind: ClusterIssuer

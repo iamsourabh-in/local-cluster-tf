@@ -23,6 +23,17 @@ spec:
       containers:
       - name: python-app
         image: python:3.9-slim
+        env:
+        - name: DATABASE_USER
+          valueFrom:
+            secretKeyRef:
+              name: db-secret
+              key: database-user
+        - name: DATABASE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: db-secret
+              key: database-password
         command: ["/bin/sh", "-c"]
         args:
           - |
@@ -31,6 +42,7 @@ spec:
             
             echo "Creating application script..."
             cat << 'EOF' > app.py
+            import os
             from http.server import BaseHTTPRequestHandler, HTTPServer
             import time
             import logging
@@ -93,6 +105,10 @@ spec:
                               <p>The OTel instrumented Python web server has processed your request successfully.</p>
                               <p>Spans have been sent to <code>opentelemetry-collector.monitoring.svc.cluster.local:4317</code>.</p>
                               <p>Logs have been printed to stdout/stderr and collected by Promtail into Loki.</p>
+                              <hr style="border-color: #334155; margin: 1.5rem 0;" />
+                              <h3 style="color: #38bdf8;">External Secrets Operator Integration</h3>
+                              <p>Database User injected from External Secrets: <code>{os.environ.get('DATABASE_USER', 'NOT_SET')}</code></p>
+                              <p>Database Password (masked): <code>{os.environ.get('DATABASE_PASSWORD', '')[:3] + '***' if os.environ.get('DATABASE_PASSWORD') else 'NOT_SET'}</code></p>
                             </div>
                           </body>
                         </html>
@@ -152,3 +168,20 @@ spec:
             name: example-app
             port:
               number: 80
+---
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: example-app-db-credentials
+  namespace: example-app
+spec:
+  refreshInterval: 1m
+  secretStoreRef:
+    name: vault-backend
+    kind: ClusterSecretStore
+  target:
+    name: db-secret
+    creationPolicy: Owner
+  dataFrom:
+    - extract:
+        key: database/credentials
