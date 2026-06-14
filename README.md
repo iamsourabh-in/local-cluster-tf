@@ -12,7 +12,8 @@ This repository contains a Terraform configuration to spin up a local Kubernetes
 - **Promtail**: Log agent that ships stdout/stderr container logs to Loki.
 - **Jaeger**: Trace visualizer and collector running in All-in-One mode.
 - **OpenTelemetry Collector**: Receives OTLP metrics, traces, and logs, routing them to Prometheus, Jaeger, and Loki respectively.
-- **External Secrets Operator**: Syncs secrets from external APIs (AWS Secrets Manager, Vault, etc.) into Kubernetes, pre-configured with a local `ClusterSecretStore` (Fake provider) for demonstration.
+- **External Secrets Operator**: Syncs secrets from external APIs (AWS Secrets Manager, Vault, etc.) into Kubernetes, pre-configured with a Vault `ClusterSecretStore` using secure Kubernetes authentication.
+- **HashiCorp Vault**: Secure secret storage server running in Development mode, unsealed automatically and seeded with Kubernetes authentication.
 
 ---
 
@@ -77,8 +78,8 @@ curl -k https://example-app.local/
   ```
 - **Unified Traces-to-Logs**:
   Within Grafana's Jaeger trace view, click on any span and you will see a **"Document"** link next to the span details that links directly to the corresponding Loki container logs around that span's timestamp!
-- **External Secrets Injection**:
-  When you load the app, the web page will display the database username (`eso-admin-db`) and masked password (`Sup***`) injected dynamically from the `ClusterSecretStore` via the `ExternalSecret` resource.
+- **External Secrets & Vault Integration**:
+  The External Secrets Operator dynamically retrieves the database credentials from HashiCorp Vault using the Kubernetes authentication method (where ESO's ServiceAccount token is verified by Vault) and syncs them as a standard Kubernetes Secret (`db-secret`). When you load the app, the page displays the database username (`vault-admin-db`) and masked password (`Vau***`) injected securely via env variables.
 
 ---
 
