@@ -23,3 +23,8 @@ argocd_domain     = "argocd.local"
 
 # Security & Secrets Configuration
 vault_root_token = "vault-root-token"
+
+# Istio Configuration
+istio_namespace = "istio-system"
+istio_version   = "1.24.6"
+

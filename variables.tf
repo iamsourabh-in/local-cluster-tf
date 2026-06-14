@@ -82,5 +82,18 @@ variable "argocd_domain" {
   default     = "argocd.local"
 }
 
+variable "istio_namespace" {
+  description = "Namespace for Istio System"
+  type        = string
+  default     = "istio-system"
+}
+
+variable "istio_version" {
+  description = "Version of Istio Helm charts"
+  type        = string
+  default     = "1.24.6"
+}
+
+
 
 
