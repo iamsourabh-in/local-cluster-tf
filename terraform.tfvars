@@ -12,12 +12,14 @@ cert_manager_namespace     = "cert-manager"
 monitoring_namespace       = "monitoring"
 external_secrets_namespace = "external-secrets"
 vault_namespace            = "vault"
+argocd_namespace           = "argocd"
 
 # Local Ingress Domains (mapped via /etc/hosts)
 example_domain    = "example-app.local"
 grafana_domain    = "grafana.local"
 prometheus_domain = "prometheus.local"
 jaeger_domain     = "jaeger.local"
+argocd_domain     = "argocd.local"
 
 # Security & Secrets Configuration
 vault_root_token = "vault-root-token"

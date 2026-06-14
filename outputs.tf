@@ -28,6 +28,11 @@ output "otel_collector_internal_http" {
   value       = "opentelemetry-collector.${var.monitoring_namespace}.svc.cluster.local:4318"
 }
 
+output "argocd_url" {
+  description = "The local URL to access Argo CD UI"
+  value       = "https://${var.argocd_domain}"
+}
+
 output "instructions" {
   description = "Quick post-deployment instructions for local setup"
   value       = <<EOF
@@ -36,12 +41,16 @@ Platform environment has been provisioned successfully!
 
 1. Update your local /etc/hosts file to access the dashboards and applications locally:
    Add the following line to /etc/hosts:
-   127.0.0.1 ${var.grafana_domain} ${var.prometheus_domain} ${var.jaeger_domain} ${var.example_domain}
+   127.0.0.1 ${var.grafana_domain} ${var.prometheus_domain} ${var.jaeger_domain} ${var.example_domain} ${var.argocd_domain}
 
 2. Access the UIs in your web browser:
    - Grafana: http://${var.grafana_domain} (Default Username: admin, Password: prom-operator)
    - Prometheus: http://${var.prometheus_domain}
    - Jaeger: http://${var.jaeger_domain}
+   - Argo CD: https://${var.argocd_domain} (Default Username: admin)
+
+   To retrieve the Argo CD initial admin password, run:
+   kubectl -n ${var.argocd_namespace} get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d; echo
 
 3. To configure your application, send OTel metrics, traces, and logs to the collector:
    - OTLP gRPC endpoint: opentelemetry-collector.${var.monitoring_namespace}.svc.cluster.local:4317

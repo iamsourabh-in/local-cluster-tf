@@ -70,4 +70,17 @@ variable "vault_root_token" {
   default     = "vault-root-token"
 }
 
+variable "argocd_namespace" {
+  description = "Namespace for Argo CD"
+  type        = string
+  default     = "argocd"
+}
+
+variable "argocd_domain" {
+  description = "Local domain for Argo CD UI"
+  type        = string
+  default     = "argocd.local"
+}
+
+
 

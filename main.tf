@@ -82,3 +82,11 @@ resource "kubernetes_namespace" "external_secrets" {
   }
 }
 
+resource "kubernetes_namespace" "argocd" {
+  depends_on = [kind_cluster.default]
+  metadata {
+    name = var.argocd_namespace
+  }
+}
+
+
