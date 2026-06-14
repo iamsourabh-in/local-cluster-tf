@@ -26,6 +26,7 @@ resource "helm_release" "argocd" {
 
   depends_on = [
     kubernetes_namespace.argocd,
-    helm_release.ingress_nginx
+    helm_release.ingress_nginx,
+    kubectl_manifest.selfsigned_issuer
   ]
 }

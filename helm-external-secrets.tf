@@ -60,7 +60,8 @@ resource "kubectl_manifest" "vault_secret_store" {
   YAML
 
   depends_on = [
-    helm_release.external_secrets
+    helm_release.external_secrets,
+    kubectl_manifest.vault_seeding_job
   ]
 }
 

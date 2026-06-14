@@ -84,7 +84,8 @@ resource "helm_release" "jaeger" {
   ]
 
   depends_on = [
-    kubernetes_namespace.monitoring
+    kubernetes_namespace.monitoring,
+    helm_release.ingress_nginx
   ]
 }
 
@@ -140,7 +141,8 @@ resource "helm_release" "kube_prometheus_stack" {
   depends_on = [
     kubernetes_namespace.monitoring,
     helm_release.loki,
-    helm_release.jaeger
+    helm_release.jaeger,
+    helm_release.ingress_nginx
   ]
 }
 
